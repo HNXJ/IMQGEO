@@ -7,6 +7,7 @@ from PyQt5 import QtGui
 import IMQImageViewer as ImageViewer
 import IMQShapeFile as Shape
 import IMQProcessRun as Run
+import threading
 import sys
 
 
@@ -46,8 +47,10 @@ class WidgetGallery(QDialog):
 
         disableWidgetsCheckBox = QCheckBox("&Disable widgets")
 
+        self.createTopLeft2GroupBox()
         self.createTopLeftGroupBox()
         self.createTopRightGroupBox()
+        
         self.createBottomLeftTabWidget()
         self.createBottomRightGroupBox()
         self.createProgressBar()
@@ -71,9 +74,10 @@ class WidgetGallery(QDialog):
         mainLayout = QGridLayout()
         mainLayout.addLayout(topLayout, 0, 0, 1, 2)
         mainLayout.addWidget(self.topLeftGroupBox, 1, 0)
-        mainLayout.addWidget(self.topRightGroupBox, 1, 1, 1, 2)
+        mainLayout.addWidget(self.topLeft2GroupBox, 1, 1)
+        mainLayout.addWidget(self.topRightGroupBox, 1, 2, 1, 2)
         
-        mainLayout.addWidget(self.bottomLeftTabWidget, 1, 3, 1, 1)
+        mainLayout.addWidget(self.bottomLeftTabWidget, 1, 4, 1, 1)
         mainLayout.addWidget(self.bottomRightGroupBox, 2, 0, 1, 4)
         mainLayout.addWidget(self.progressBar, 3, 0, 1, 4)
         mainLayout.setRowStretch(1, 1)
@@ -81,7 +85,8 @@ class WidgetGallery(QDialog):
         mainLayout.setRowStretch(2, 4)
         mainLayout.setColumnStretch(0, 1)
         mainLayout.setColumnStretch(1, 1)
-        mainLayout.setColumnStretch(2, 1)
+        mainLayout.setColumnStretch(2, 2)
+        mainLayout.setColumnStretch(3, 2)
         
         self.setLayout(mainLayout)
         self.setWindowTitle("Map parser")
@@ -112,6 +117,69 @@ class WidgetGallery(QDialog):
         self.progressBar.setValue(curVal + (maxVal - curVal) // 100)
         return
 
+    def createTopLeft2GroupBox(self):
+        
+        self.topLeft2GroupBox = QGroupBox("Custom Detail")
+        # self.radioButton1 = QRadioButton("Water Channels")
+        # self.radioButton2 = QRadioButton("Borders")
+        
+        # self.radioButton3 = QRadioButton("Rivers")
+        # self.radioButton4 = QRadioButton("Low borders")
+        flo = QFormLayout()
+        
+        self.RlineEdit1 = QLineEdit()
+        self.RlineEdit1.setMaxLength(3)
+        # self.Rlanel1 = QLabel("Red")
+        
+        self.GlineEdit1 = QLineEdit()
+        self.GlineEdit1.setMaxLength(3)
+        # self.Rlanel1 = QLabel("Green")
+        
+        self.BlineEdit1 = QLineEdit()
+        self.BlineEdit1.setMaxLength(3)
+        # self.Rlanel1 = QLabel("Blue")
+        
+        self.RlineEdit2 = QLineEdit()
+        self.RlineEdit2.setMaxLength(3)
+        # self.Rlanel1 = QLabel("Red")
+        
+        self.GlineEdit2 = QLineEdit()
+        self.GlineEdit2.setMaxLength(3)
+        # self.Rlanel1 = QLabel("Green")
+        
+        self.BlineEdit2 = QLineEdit()
+        self.BlineEdit2.setMaxLength(3)
+        # self.Rlanel1 = QLabel("Blue")
+        
+        flo.addRow("Red min", self.RlineEdit1)
+        flo.addRow("Green min", self.GlineEdit1)
+        flo.addRow("Blue min", self.BlineEdit1)
+        
+        flo.addRow("Red max", self.RlineEdit2)
+        flo.addRow("Green max", self.GlineEdit2)
+        flo.addRow("Blue max", self.BlineEdit2)
+        
+        layout = QVBoxLayout()
+        # layout.addWidget(self.radioButton1)
+        # layout.addWidget(self.radioButton2)
+        # layout.addWidget(self.radioButton3)
+        
+        # layout.addWidget(self.radioButton4)
+        # layout.addWidget(self.radioButton5)
+        
+        # layout.addWidget(self.RlineEdit1, alignment=Qt.AlignRight)
+        # layout.addWidget(self.GlineEdit1, alignment=Qt.AlignRight)
+        # layout.addWidget(self.BlineEdit1, alignment=Qt.AlignRight)
+        
+        # layout.addWidget(self.RlineEdit2, alignment=Qt.AlignRight)
+        # layout.addWidget(self.GlineEdit2, alignment=Qt.AlignRight)
+        # layout.addWidget(self.BlineEdit2, alignment=Qt.AlignRight)
+        
+        layout.addStretch(1)
+        
+        self.topLeft2GroupBox.setLayout(flo)    
+        return
+    
     def createTopLeftGroupBox(self):
         
         self.topLeftGroupBox = QGroupBox("Detail")
@@ -120,6 +188,18 @@ class WidgetGallery(QDialog):
         
         self.radioButton3 = QRadioButton("Rivers")
         self.radioButton4 = QRadioButton("Low borders")
+        self.radioButton5 = QRadioButton("Custom thresholding")
+        
+        
+        self.radioButton1.toggled.connect(self.topLeft2GroupBox.setDisabled)
+        self.radioButton2.toggled.connect(self.topLeft2GroupBox.setDisabled)
+        self.radioButton3.toggled.connect(self.topLeft2GroupBox.setDisabled)
+        self.radioButton4.toggled.connect(self.topLeft2GroupBox.setDisabled)
+        
+        # self.RlineEdit = QLineEdit()
+        # self.GlineEdit = QLineEdit()
+        # self.BlineEdit = QLineEdit()
+        
         self.radioButton1.setChecked(True)
 
         checkBox = QCheckBox("Remove rednoise")
@@ -132,6 +212,12 @@ class WidgetGallery(QDialog):
         layout.addWidget(self.radioButton3)
         
         layout.addWidget(self.radioButton4)
+        layout.addWidget(self.radioButton5)
+        
+        # layout.addWidget(self.RlineEdit)
+        # layout.addWidget(self.GlineEdit)
+        # layout.addWidget(self.BlineEdit)
+        
         layout.addWidget(checkBox)
         layout.addStretch(1)
         
@@ -143,9 +229,19 @@ class WidgetGallery(QDialog):
         fp = self.lineEdit.text()
         sp = self.slider_ratio.value()
         
+        r1 = self.RlineEdit1.text()
+        g1 = self.GlineEdit1.text()
+        b1 = self.RlineEdit1.text()
+        
+        r2 = self.RlineEdit2.text()
+        g2 = self.GlineEdit2.text()
+        b2 = self.RlineEdit2.text()
+        
         self.progressBar.setValue(0)
         self.Consule.append("Loading image, ratio = " + str(sp))
         if self.radioButton1.isChecked():
+            # I = threading.Thread(target=Run.channels
+                                 # ,args=(None, "default", sp, fp))
             I = Run.channels(scale_percent=sp, filepath=fp)
             self.label1.setText("Channels")
         elif self.radioButton2.isChecked():
@@ -157,10 +253,30 @@ class WidgetGallery(QDialog):
         elif self.radioButton4.isChecked():
             I = Run.Roads(scale_percent=sp, filepath=fp)
             self.label1.setText("Low borders")
+        elif self.radioButton5.isChecked():
+            try:
+                r1 = max(min(int(r1), 255), 0)
+                g1 = max(min(int(g1), 255), 0)
+                b1 = max(min(int(b1), 255), 0)
+                
+                r2 = max(min(int(r2), 255), 0)
+                g2 = max(min(int(g2), 255), 0)
+                b2 = max(min(int(b2), 255), 0)
+                
+            except Exception:
+                self.Consule.append("RGB color values must be integer numbers")
+                # QtGui.QMessageBox.about(self, 'Error','Input can only be a number')
+                return
+            
+            I = Run.Custom(scale_percent=sp, filepath=fp, lr=r1, lg=g1, lb=b1
+                           ,hr=r2, hg=g2, hb=b2)
+            self.label1.setText("Custom threshold")
         
         # plt.figure('Plots')
         # imgplot = plt.imshow(I)
         # plt.show()
+        J = I
+        # J = I.start()
         self.progressBar.setValue(40)
         self.Consule.append("Processing ...")
         self.progressBar.setValue(75)
@@ -170,7 +286,7 @@ class WidgetGallery(QDialog):
         self.progressBar.setValue(100)
         
         self.imageViewer.show()
-        self.imageViewer.showMap(I)
+        self.imageViewer.showMap(J)
         return
     
     def SavePlots(self, args):

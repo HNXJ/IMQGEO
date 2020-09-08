@@ -108,7 +108,7 @@ def get_target(contours, img):
             continue
 
         approx = cv2.approxPolyDP(cnt, 0.01*cv2.arcLength(cnt, True), True)
-        cv2.drawContours(img, [approx], 0, (255, 0, 0), 1)
+        # cv2.drawContours(img, [approx], 0, (255, 0, 0), 1)
         x = int(np.mean(approx[:, 0, 0]))
         y = int(np.mean(approx[:, 0, 1]))
 
