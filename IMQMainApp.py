@@ -23,18 +23,7 @@ class WidgetGallery(QDialog):
         self.originalPalette.setColor(QPalette.WindowText, Qt.white)
         self.originalPalette.setColor(QPalette.Base, QColor(25, 25, 25))
         self.originalPalette.setColor(QPalette.AlternateBase, QColor(53, 53, 53))
-        
-        # palette.setColor(QPalette.ToolTipBase, Qt.white)
-        # palette.setColor(QPalette.ToolTipText, Qt.white)
-        # palette.setColor(QPalette.Text, Qt.white)
-        # palette.setColor(QPalette.Button, QColor(53, 53, 53))
-        
-        # palette.setColor(QPalette.ButtonText, Qt.white)
-        # palette.setColor(QPalette.BrightText, Qt.red)
-        # palette.setColor(QPalette.Link, QColor(42, 130, 218))
-        # palette.setColor(QPalette.Highlight, QColor(42, 130, 218))
-        
-        # palette.setColor(QPalette.HighlightedText, Qt.black)
+
         styleComboBox = QComboBox()
         styleComboBox.addItems(QStyleFactory.keys())
 
@@ -78,11 +67,11 @@ class WidgetGallery(QDialog):
         mainLayout.addWidget(self.topRightGroupBox, 1, 2, 1, 2)
         
         mainLayout.addWidget(self.bottomLeftTabWidget, 1, 4, 1, 1)
-        mainLayout.addWidget(self.bottomRightGroupBox, 2, 0, 1, 4)
+        mainLayout.addWidget(self.bottomRightGroupBox, 2, 0, 1, 5)
         mainLayout.addWidget(self.progressBar, 3, 0, 1, 4)
         mainLayout.setRowStretch(1, 1)
         
-        mainLayout.setRowStretch(2, 4)
+        mainLayout.setRowStretch(2, 5)
         mainLayout.setColumnStretch(0, 1)
         mainLayout.setColumnStretch(1, 1)
         mainLayout.setColumnStretch(2, 2)
@@ -95,13 +84,13 @@ class WidgetGallery(QDialog):
         
         return
 
-    def changeStyle(self, styleName):
+    def changeStyle(self, styleName): # For changing style of GUI
         
         QApplication.setStyle(QStyleFactory.create(styleName))
         self.changePalette()
         return
 
-    def changePalette(self):
+    def changePalette(self): # Palette change
         
         if (self.useStylePaletteCheckBox.isChecked()):
             QApplication.setPalette(QApplication.style().standardPalette())
@@ -110,21 +99,16 @@ class WidgetGallery(QDialog):
         
         return
 
-    def advanceProgressBar(self):
+    def advanceProgressBar(self): # Progressbar changes
         
         curVal = self.progressBar.value()
         maxVal = self.progressBar.maximum()
         self.progressBar.setValue(curVal + (maxVal - curVal) // 100)
         return
 
-    def createTopLeft2GroupBox(self):
+    def createTopLeft2GroupBox(self): # Top left tab formation
         
         self.topLeft2GroupBox = QGroupBox("Custom Detail")
-        # self.radioButton1 = QRadioButton("Water Channels")
-        # self.radioButton2 = QRadioButton("Borders")
-        
-        # self.radioButton3 = QRadioButton("Rivers")
-        # self.radioButton4 = QRadioButton("Low borders")
         flo = QFormLayout()
         
         self.RlineEdit1 = QLineEdit()
@@ -160,27 +144,12 @@ class WidgetGallery(QDialog):
         flo.addRow("Blue max", self.BlineEdit2)
         
         layout = QVBoxLayout()
-        # layout.addWidget(self.radioButton1)
-        # layout.addWidget(self.radioButton2)
-        # layout.addWidget(self.radioButton3)
-        
-        # layout.addWidget(self.radioButton4)
-        # layout.addWidget(self.radioButton5)
-        
-        # layout.addWidget(self.RlineEdit1, alignment=Qt.AlignRight)
-        # layout.addWidget(self.GlineEdit1, alignment=Qt.AlignRight)
-        # layout.addWidget(self.BlineEdit1, alignment=Qt.AlignRight)
-        
-        # layout.addWidget(self.RlineEdit2, alignment=Qt.AlignRight)
-        # layout.addWidget(self.GlineEdit2, alignment=Qt.AlignRight)
-        # layout.addWidget(self.BlineEdit2, alignment=Qt.AlignRight)
-        
         layout.addStretch(1)
         
         self.topLeft2GroupBox.setLayout(flo)    
         return
     
-    def createTopLeftGroupBox(self):
+    def createTopLeftGroupBox(self): # Second top left tab formation
         
         self.topLeftGroupBox = QGroupBox("Detail")
         self.radioButton1 = QRadioButton("Water Channels")
@@ -190,15 +159,10 @@ class WidgetGallery(QDialog):
         self.radioButton4 = QRadioButton("Low borders")
         self.radioButton5 = QRadioButton("Custom thresholding")
         
-        
         self.radioButton1.toggled.connect(self.topLeft2GroupBox.setDisabled)
         self.radioButton2.toggled.connect(self.topLeft2GroupBox.setDisabled)
         self.radioButton3.toggled.connect(self.topLeft2GroupBox.setDisabled)
         self.radioButton4.toggled.connect(self.topLeft2GroupBox.setDisabled)
-        
-        # self.RlineEdit = QLineEdit()
-        # self.GlineEdit = QLineEdit()
-        # self.BlineEdit = QLineEdit()
         
         self.radioButton1.setChecked(True)
 
@@ -213,18 +177,14 @@ class WidgetGallery(QDialog):
         
         layout.addWidget(self.radioButton4)
         layout.addWidget(self.radioButton5)
-        
-        # layout.addWidget(self.RlineEdit)
-        # layout.addWidget(self.GlineEdit)
-        # layout.addWidget(self.BlineEdit)
-        
+
         layout.addWidget(checkBox)
         layout.addStretch(1)
         
         self.topLeftGroupBox.setLayout(layout)    
         return
     
-    def ShowPlots(self, args):
+    def ShowPlots(self, args): # Showing plots in image viewer sub-app GUI
         self.Consule.setPlainText(" - ")
         fp = self.lineEdit.text()
         sp = self.slider_ratio.value()
@@ -240,8 +200,6 @@ class WidgetGallery(QDialog):
         self.progressBar.setValue(0)
         self.Consule.append("Loading image, ratio = " + str(sp))
         if self.radioButton1.isChecked():
-            # I = threading.Thread(target=Run.channels
-                                 # ,args=(None, "default", sp, fp))
             I = Run.channels(scale_percent=sp, filepath=fp)
             self.label1.setText("Channels")
         elif self.radioButton2.isChecked():
@@ -265,18 +223,13 @@ class WidgetGallery(QDialog):
                 
             except Exception:
                 self.Consule.append("RGB color values must be integer numbers")
-                # QtGui.QMessageBox.about(self, 'Error','Input can only be a number')
                 return
             
             I = Run.Custom(scale_percent=sp, filepath=fp, lr=r1, lg=g1, lb=b1
                            ,hr=r2, hg=g2, hb=b2)
             self.label1.setText("Custom threshold")
         
-        # plt.figure('Plots')
-        # imgplot = plt.imshow(I)
-        # plt.show()
         J = I
-        # J = I.start()
         self.progressBar.setValue(40)
         self.Consule.append("Processing ...")
         self.progressBar.setValue(75)
@@ -289,91 +242,63 @@ class WidgetGallery(QDialog):
         self.imageViewer.showMap(J)
         return
     
-    def SavePlots(self, args):
-        
-        self.Consule.setPlainText(" - ")
-        print(self.radioButton1.isChecked())
-        self.progressBar.setValue(100)
+    def SavePlot(self, args): 
         return
     
-    def ShapeFile(self, args):
+    def ShapeFile(self, args): # Convert to shapefile and save among app root
         
         self.Consule.setPlainText(" Converting ...")
         self.progressBar.setValue(20)        
         
-        try:
-            if self.radioButton1.isChecked():
-                Shape.run("dblues.dxf")
-            elif self.radioButton2.isChecked():
-                Shape.run("darks.dxf")
-            elif self.radioButton3.isChecked():
-                Shape.run("lblues.dxf")
-            elif self.radioButton4.isChecked():
-                Shape.run("pinks.png")
-        except:
-            self.Consule.setPlainText(" Converting failed ! type error")
+        # try:
+        if self.radioButton1.isChecked():
+            Shape.run("dblues.dxf")
+        elif self.radioButton2.isChecked():
+            Shape.run("darks.dxf")
+        elif self.radioButton3.isChecked():
+            Shape.run("lblues.dxf")
+        elif self.radioButton4.isChecked():
+            Shape.run("pinks.png")
+        # except:
+        #     self.Consule.setPlainText(" Converting failed ! type error")
             
         return
         
-    def createTopRightGroupBox(self):
+    def createTopRightGroupBox(self): # Topright tab formation
         
         self.topRightGroupBox = QGroupBox("Actions")
         self.ShowPlots_ = QPushButton("Show plots")
         self.ShapeFile_ = QPushButton("Covert to shape file")
+        self.SavePlot_ = QPushButton("Save plot")
+        
         self.ShowPlots_.clicked.connect(self.ShowPlots)
         self.ShapeFile_.clicked.connect(self.ShapeFile)
+        self.ShapeFile_.clicked.connect(self.SavePlot)
         self.ShowPlots_.setDefault(False)
 
-        # self.SavePlots_ = QPushButton("Save plots")
-        # self.SavePlots_.clicked.connect(self.SavePlots)
-        # self.SavePlots_.setDefault(False)
-        # self.SavePlots_.setCheckable(True)
-        # self.SavePlots_.setChecked(False)
-        
         fname_label = QLabel("Filepath")
         self.lineEdit = QLineEdit('CyprusGeologyMapTaurus.tif')
-        
-        # self.lineEdit.setEchoMode(QLineEdit.Password)
-        # spinBox = QSpinBox(self.bottomRightGroupBox)
-        # spinBox.setValue(50)
-        
-        # dateTimeEdit = QDateTimeEdit(self.bottomRightGroupBox)
-        # dateTimeEdit.setDateTime(QDateTime.currentDateTime())
-            
+
         slider_label = QLabel("Ratio")
         self.slider_ratio = QSlider(Qt.Horizontal, self.topRightGroupBox)
         self.slider_ratio.setValue(10)
-
-        # scrollBar = QScrollBar(Qt.Horizontal, self.bottomRightGroupBox)
-        # scrollBar.setValue(60)
-
-        # dial = QDial(self.bottomRightGroupBox)
-        # dial.setValue(30)
-        # dial.setNotchesVisible(True)
-
-        # layout.setRowStretch(5, 1)
         
         layout = QVBoxLayout()
         layout.addWidget(fname_label)
         layout.addWidget(self.lineEdit)
         
-        # layout.addWidget(spinBox, 1, 0, 1, 2)
-        # layout.addWidget(dateTimeEdit, 2, 0, 1, 2)
-        # slider_label = QLabel("Ratio")
-        
         layout.addWidget(slider_label)
         layout.addWidget(self.slider_ratio)
-        # layout.addWidget(scrollBar, 4, 0)
-        # layout.addWidget(dial, 3, 1, 2, 1)
-        
         layout.addWidget(self.ShowPlots_)
         layout.addWidget(self.ShapeFile_)
-        # layout.addWidget(self.SavePlots_)
+        # layout.addWidget(self.SavePlot_)
+        
+        
         layout.addStretch(1)
         self.topRightGroupBox.setLayout(layout)
         return
     
-    def createBottomLeftTabWidget(self):
+    def createBottomLeftTabWidget(self): # Consule formation
     
         self.bottomLeftTabWidget = QTabWidget()
         self.bottomLeftTabWidget.setSizePolicy(QSizePolicy.Preferred,
@@ -396,77 +321,35 @@ class WidgetGallery(QDialog):
         tab2hbox.addWidget(self.Consule)
         tab2.setLayout(tab2hbox)
 
-        # self.bottomLeftTabWidget.addTab(tab1, "&Table")
         self.bottomLeftTabWidget.addTab(tab2, "Consule")
         return
     
-    def createBottomRightGroupBox(self):
+    def createBottomRightGroupBox(self): # App's image viewer tab formation
         
         self.bottomRightGroupBox = QGroupBox("Plot")
         self.bottomRightGroupBox.setCheckable(True)
         self.bottomRightGroupBox.setChecked(True)
 
-        # self.lineEdit = QLineEdit('CyprusGeologyMapTaurus.tif')
-        # self.lineEdit.setEchoMode(QLineEdit.Password)
-
-        # spinBox = QSpinBox(self.bottomRightGroupBox)
-        # spinBox.setValue(50)
-
-        # dateTimeEdit = QDateTimeEdit(self.bottomRightGroupBox)
-        # dateTimeEdit.setDateTime(QDateTime.currentDateTime())
-
-        # slider = QSlider(Qt.Horizontal, self.bottomRightGroupBox)
-        # slider.setValue(40)
-
-        # scrollBar = QScrollBar(Qt.Horizontal, self.bottomRightGroupBox)
-        # scrollBar.setValue(60)
-
-        # dial = QDial(self.bottomRightGroupBox)
-        # dial.setValue(30)
-        # dial.setNotchesVisible(True)
-
         layout = QGridLayout()
-        # layout.addWidget(self.lineEdit, 0, 0, 1, 2)
-        # layout.addWidget(spinBox, 1, 0, 1, 2)
-        # layout.addWidget(dateTimeEdit, 2, 0, 1, 2)
         self.label1 = QLabel("Type")
         
         layout.addWidget(self.label1)
-        # label2 = QLabel(" ")
-        # layout.addWidget(label2)
-        # label3 = QLabel(" ")
         layout.addWidget(self.imageViewer, 1, 0, 3, 4)
-  
-        # layout.addWidget(slider, 3, 0)
-        # layout.addWidget(scrollBar, 4, 0)
-        # layout.addWidget(dial, 3, 1, 2, 1)
-        
         layout.setRowStretch(1, 4)
         layout.setColumnStretch(0, 3)
-        self.bottomRightGroupBox.setLayout(layout)
         
+        self.bottomRightGroupBox.setLayout(layout)
         return
     
-    def createProgressBar(self):
+    def createProgressBar(self): # Progressbar formation
         
         self.progressBar = QProgressBar()
         self.progressBar.setRange(0, 100)
         self.progressBar.setValue(0)
-        
-        # timer = QTimer(self)
-        # timer.timeout.connect(self.advanceProgressBar)
-        # timer.start(1000)
-        
         return
     
 
-if __name__ == '__main__':
-
-    # app = QApplication(sys.argv)
-    # imageViewer = ImageViewer.QImageViewer()
-    # imageViewer.show()
-    # sys.exit(app.exec_())
-    
+if __name__ == '__main__': # Main executer part
     app = QApplication(sys.argv)
     gallery = WidgetGallery()
     gallery.show()

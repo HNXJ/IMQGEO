@@ -4,6 +4,8 @@ from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
 from PyQt5.QtWidgets import QLabel, QSizePolicy, QScrollArea, QMessageBox, QMainWindow, QMenu, QAction, \
     qApp, QFileDialog
 
+import cv2
+
 
 class QImageViewer(QMainWindow):
     
@@ -27,6 +29,7 @@ class QImageViewer(QMainWindow):
 
         self.createActions()
         self.createMenus()
+        self.currimg = None
 
         self.setWindowTitle("Map viewer")
         self.resize(3840, 2160)
@@ -39,6 +42,7 @@ class QImageViewer(QMainWindow):
                                                   'Images (*.png *.jpeg *.jpg *.bmp *.gif)', options=options)
         if fileName:
             image = QImage(fileName)
+            self.currimg = cv2.imread(fileName)
             if image.isNull():
                 QMessageBox.information(self, "Image Viewer", "Cannot load %s." % fileName)
                 return
@@ -53,6 +57,20 @@ class QImageViewer(QMainWindow):
 
             if not self.fitToWindowAct.isChecked():
                 self.imageLabel.adjustSize()
+        return
+    
+    def save(self):
+        
+        options = QFileDialog.Options()
+        # fileName = QFileDialog.getOpenFileName(self, "Open File", QDir.currentPath())
+        fileName, _ = QFileDialog.getSaveFileName(self, 'Save', '',
+                                                  'Images (*.png *.jpeg *.jpg *.bmp *.gif *.tif)', options=options)
+        img = self.currimg
+        if fileName:
+            try:
+                cv2.imwrite(fileName, img)
+            except:
+                print("No image to save.")
         return
     
     def showMap(self, fileName):
@@ -89,7 +107,7 @@ class QImageViewer(QMainWindow):
             painter.setViewport(rect.x(), rect.y(), size.width(), size.height())
             painter.setWindow(self.imageLabel.pixmap().rect())
             painter.drawPixmap(0, 0, self.imageLabel.pixmap())
-
+    
     def zoomIn(self):
         self.scaleImage(1.25)
 
@@ -127,6 +145,7 @@ class QImageViewer(QMainWindow):
     def createActions(self):
         self.openAct = QAction("&Open...", self, shortcut="Ctrl+O", triggered=self.open)
         self.printAct = QAction("&Print...", self, shortcut="Ctrl+P", enabled=False, triggered=self.print_)
+        self.saveAct = QAction("&Save...", self, shortcut="Ctrl+S", enabled=True, triggered=self.save)
         self.exitAct = QAction("E&xit", self, shortcut="Ctrl+Q", triggered=self.close)
         self.zoomInAct = QAction("Zoom &In (25%)", self, shortcut="Ctrl++", enabled=False, triggered=self.zoomIn)
         self.zoomOutAct = QAction("Zoom &Out (25%)", self, shortcut="Ctrl+-", enabled=False, triggered=self.zoomOut)
@@ -140,6 +159,7 @@ class QImageViewer(QMainWindow):
         self.fileMenu = QMenu("&File", self)
         self.fileMenu.addAction(self.openAct)
         self.fileMenu.addAction(self.printAct)
+        self.fileMenu.addAction(self.saveAct)
         self.fileMenu.addSeparator()
         self.fileMenu.addAction(self.exitAct)
 
