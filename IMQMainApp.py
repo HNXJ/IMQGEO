@@ -1,20 +1,23 @@
-from PyQt5.QtGui import QKeySequence, QPalette, QColor
-from PyQt5.QtCore import QDateTime, Qt, QTimer, QRect
-from matplotlib import pyplot as plt
+from PyQt5.QtGui import QPalette, QColor
 from PyQt5.QtWidgets import *
-from PyQt5 import QtGui
+from PyQt5.QtCore import Qt
 
 import IMQImageViewer as ImageViewer
 import IMQShapeFile as Shape
 import IMQProcessRun as Run
-import threading
 import sys
+import os
 
 
 class WidgetGallery(QDialog):
     
     def __init__(self, parent=None):
         
+        try:
+            os.mkdir("Data")
+        except:
+            print("Cannot build folder")
+            
         super(WidgetGallery, self).__init__(parent)
         self.originalPalette = QApplication.palette()
         self.resize(1600, 900)           
@@ -185,7 +188,7 @@ class WidgetGallery(QDialog):
         return
     
     def ShowPlots(self, args): # Showing plots in image viewer sub-app GUI
-        self.Consule.setPlainText(" - ")
+        self.Consule.setPlainText(" Please wait ...  ")
         fp = self.lineEdit.text()
         sp = self.slider_ratio.value()
         
@@ -247,28 +250,29 @@ class WidgetGallery(QDialog):
     
     def ShapeFile(self, args): # Convert to shapefile and save among app root
         
-        self.Consule.setPlainText(" Converting ...")
+        self.Consule.setPlainText(" Converting, please wait ...")
         self.progressBar.setValue(20)        
         
-        # try:
-        if self.radioButton1.isChecked():
-            Shape.run("dblues.dxf")
-        elif self.radioButton2.isChecked():
-            Shape.run("darks.dxf")
-        elif self.radioButton3.isChecked():
-            Shape.run("lblues.dxf")
-        elif self.radioButton4.isChecked():
-            Shape.run("pinks.png")
-        # except:
-        #     self.Consule.setPlainText(" Converting failed ! type error")
+        try:
+            if self.radioButton1.isChecked():
+                fname = Shape.run("Data/dblues.png")
+            elif self.radioButton2.isChecked():
+                fname = Shape.run("Data/darks.png")
+            elif self.radioButton3.isChecked():
+                fname = Shape.run("Data/lblues.png")
+            elif self.radioButton4.isChecked():
+                fname = Shape.run("Data/pinks.png")
+        except:
+            self.Consule.setPlainText(" Converting failed ! type error")
             
+        self.Consule.setPlainText("Converted, in file : " + fname)
         return
         
     def createTopRightGroupBox(self): # Topright tab formation
         
         self.topRightGroupBox = QGroupBox("Actions")
         self.ShowPlots_ = QPushButton("Show plots")
-        self.ShapeFile_ = QPushButton("Covert to shape file")
+        self.ShapeFile_ = QPushButton("Covert to shape file (csv)")
         self.SavePlot_ = QPushButton("Save plot")
         
         self.ShowPlots_.clicked.connect(self.ShowPlots)

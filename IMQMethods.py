@@ -2,7 +2,6 @@ import cv2
 import argparse
 import numpy as np
 from abc import ABC
-import matplotlib.pyplot as plt
 
 
 font = cv2.FONT_HERSHEY_SIMPLEX

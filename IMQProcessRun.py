@@ -1,13 +1,8 @@
 import numpy as np
 import cv2.cv2 as cv2
-from PyQt5.QtWidgets import *
-import matplotlib.pyplot as plt
-from IMQMethods import *
-from PIL import Image 
-import sys 
 from pdf2image import convert_from_path 
-import os 
-    
+from IMQMethods import shape_detect
+
 
 def pdf_converter(PDF_file="d.pdf"):
       
@@ -87,7 +82,7 @@ def channels(I1=None, mode="default", scale_percent=20, filepath = 'CyprusGeolog
     # shape_detect(cv2.cvtColor(I_pink, cv2.COLOR_GRAY2RGB), "pinks.png")
     # shape_detect(cv2.cvtColor(I_dark, cv2.COLOR_GRAY2RGB), "darks.png")
     # shape_detect(cv2.cvtColor(I_blue, cv2.COLOR_GRAY2RGB), "lblues.png")
-    I = shape_detect(cv2.cvtColor(I_blue2, cv2.COLOR_GRAY2RGB), "dblues.png")
+    I = shape_detect(cv2.cvtColor(I_blue2, cv2.COLOR_GRAY2RGB), "Data/dblues.png")
     # shape_detect(cv2.cvtColor(I_red, cv2.COLOR_GRAY2RGB), "rednoises.png")
     
     return I
@@ -165,7 +160,7 @@ def Borders(I1=None, mode="default", scale_percent=20, filepath = 'CyprusGeology
     
     print('Detection phase...')
     # shape_detect(cv2.cvtColor(I_pink, cv2.COLOR_GRAY2RGB), "pinks.png")
-    I = shape_detect(cv2.cvtColor(I_dark, cv2.COLOR_GRAY2RGB), "darks.png")
+    I = shape_detect(cv2.cvtColor(I_dark, cv2.COLOR_GRAY2RGB), "Data/darks.png")
     # shape_detect(cv2.cvtColor(I_blue, cv2.COLOR_GRAY2RGB), "lblues.png")
     # shape_detect(cv2.cvtColor(I_blue2, cv2.COLOR_GRAY2RGB), "dblues.png")
     # shape_detect(cv2.cvtColor(I_red, cv2.COLOR_GRAY2RGB), "rednoises.png")
@@ -249,7 +244,7 @@ def Rivers(I1=None, mode="default", scale_percent=20, filepath = 'CyprusGeologyM
     print('Detection phase...')
     # shape_detect(cv2.cvtColor(I_pink, cv2.COLOR_GRAY2RGB), "pinks.png")
     # I = shape_detect(cv2.cvtColor(I_dark, cv2.COLOR_GRAY2RGB), "darks.png")
-    I = shape_detect(cv2.cvtColor(I_blue, cv2.COLOR_GRAY2RGB), "lblues.png")
+    I = shape_detect(cv2.cvtColor(I_blue, cv2.COLOR_GRAY2RGB), "Data/lblues.png")
     # shape_detect(cv2.cvtColor(I_blue2, cv2.COLOR_GRAY2RGB), "dblues.png")
     # shape_detect(cv2.cvtColor(I_red, cv2.COLOR_GRAY2RGB), "rednoises.png")
     
@@ -331,7 +326,7 @@ def Roads(I1=None, mode="default", scale_percent=20, filepath = 'CyprusGeologyMa
     # I_b = cv2.filter2D(I_b, -1, laplaceKernel)
     
     print('Detection phase...')
-    I = shape_detect(cv2.cvtColor(I_pink, cv2.COLOR_GRAY2RGB), "pinks.png")
+    I = shape_detect(cv2.cvtColor(I_pink, cv2.COLOR_GRAY2RGB), "Data/pinks.png")
     # I = shape_detect(cv2.cvtColor(I_dark, cv2.COLOR_GRAY2RGB), "darks.png")
     # I = shape_detect(cv2.cvtColor(I_blue, cv2.COLOR_GRAY2RGB), "lblues.png")
     # shape_detect(cv2.cvtColor(I_blue2, cv2.COLOR_GRAY2RGB), "dblues.png")
@@ -416,7 +411,7 @@ def Custom(I1=None, mode="default", scale_percent=20, filepath=None, lr=0, lg=0,
     
     print('Detection phase...')
     # shape_detect(cv2.cvtColor(I_pink, cv2.COLOR_GRAY2RGB), "pinks.png")
-    I = shape_detect(cv2.cvtColor(I_dark, cv2.COLOR_GRAY2RGB), "darks.png")
+    I = shape_detect(cv2.cvtColor(I_dark, cv2.COLOR_GRAY2RGB), "Data/custs.png")
     # shape_detect(cv2.cvtColor(I_blue, cv2.COLOR_GRAY2RGB), "lblues.png")
     # shape_detect(cv2.cvtColor(I_blue2, cv2.COLOR_GRAY2RGB), "dblues.png")
     # shape_detect(cv2.cvtColor(I_red, cv2.COLOR_GRAY2RGB), "rednoises.png")
@@ -492,8 +487,8 @@ def R(I1, mode="default", scale_percent=20):
     print('Detection phase...')
     # shape_detect(cv2.cvtColor(I_pink, cv2.COLOR_GRAY2RGB), "pinks.png")
     # shape_detect(cv2.cvtColor(I_dark, cv2.COLOR_GRAY2RGB), "darks.png")
-    shape_detect(cv2.cvtColor(I_blue, cv2.COLOR_GRAY2RGB), "lblues.png")
-    shape_detect(cv2.cvtColor(I_blue2, cv2.COLOR_GRAY2RGB), "dblues.png")
+    shape_detect(cv2.cvtColor(I_blue, cv2.COLOR_GRAY2RGB), "Data/lblues.png")
+    shape_detect(cv2.cvtColor(I_blue2, cv2.COLOR_GRAY2RGB), "Data/dblues.png")
     # shape_detect(cv2.cvtColor(I_red, cv2.COLOR_GRAY2RGB), "rednoises.png")
     
     # plt.figure('Dark parts')

@@ -62,7 +62,6 @@ class QImageViewer(QMainWindow):
     def save(self):
         
         options = QFileDialog.Options()
-        # fileName = QFileDialog.getOpenFileName(self, "Open File", QDir.currentPath())
         fileName, _ = QFileDialog.getSaveFileName(self, 'Save', '',
                                                   'Images (*.png *.jpeg *.jpg *.bmp *.gif *.tif)', options=options)
         img = self.currimg
@@ -75,12 +74,9 @@ class QImageViewer(QMainWindow):
     
     def showMap(self, fileName):
         
-        options = QFileDialog.Options()
-        # fileName = QFileDialog.getOpenFileName(self, "Open File", QDir.currentPath())
-        # fileName, _ = QFileDialog.getOpenFileName(self, 'QFileDialog.getOpenFileName()', '',
-                                                  # 'Images (*.png *.jpeg *.jpg *.bmp *.gif)', options=options)
-        # print(fileName)
         if fileName:
+            
+            self.currimg = cv2.imread(fileName)
             image = QImage(fileName)
             if image.isNull():
                 QMessageBox.information(self, "Image Viewer", "Cannot load %s." % fileName)
