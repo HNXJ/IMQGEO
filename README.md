@@ -1,2 +1,2 @@
 # IMQGEO
-QQIM
+Map parser GUI test
