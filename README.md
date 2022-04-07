@@ -2,6 +2,6 @@
 
 ## Map parser GUI test GUI 
 
-This application is for geological map/image decomposition for further applications.
+This application is for basic image decomposition
 
 @ 2019
